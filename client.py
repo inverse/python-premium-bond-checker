@@ -3,6 +3,8 @@ from typing import List
 
 import requests
 
+from exceptions import InvalidHolderNumberException
+
 
 @dataclass
 class Result:
@@ -23,7 +25,7 @@ class CheckResult:
 
 
 class Client:
-    BASE_URL = 'https://www.nsandi.com/'
+    BASE_URL = "https://www.nsandi.com/"
 
     def check(self, holder_number: str) -> CheckResult:
         check_result = CheckResult()
@@ -33,26 +35,29 @@ class Client:
         return check_result
 
     def check_this_month(self, holder_number: str) -> Result:
-        json = self._do_request(holder_number, 'this_month')
-        won = json['status'] != 'no_win'
-        return Result(won, holder_number, 'this_month')
+        return self._do_request(holder_number, "this_month")
 
     def check_last_six_months(self, holder_number: str) -> Result:
-        json = self._do_request(holder_number, 'last_six_month')
-        won = json['status'] != 'no_win'
-        return Result(won, holder_number, 'last_six_month')
+        return self._do_request(holder_number, "last_six_month")
 
     def check_unclaimed(self, holder_number: str) -> Result:
-        json = self._do_request(holder_number, 'unclaimed_prize')
-        won = json['status'] != 'no_win'
-        return Result(won, holder_number, 'unclaimed_prize')
+        return self._do_request(holder_number, "unclaimed_prize")
 
-    def _do_request(self, holder_number: str, bond_period: str) -> dict:
+    def _do_request(self, holder_number: str, bond_period: str) -> Result:
         url = f"{self.BASE_URL}premium-bonds-have-i-won-ajax"
-        response = requests.post(url, data={
-            'field_premium_bond_period': bond_period,
-            'field_premium_bond_number': holder_number
-        })
+        response = requests.post(
+            url,
+            data={
+                "field_premium_bond_period": bond_period,
+                "field_premium_bond_number": holder_number,
+            },
+        )
 
         response.raise_for_status()
-        return response.json()
+        json = response.json()
+
+        if json["holder_number"] == "is invalid":
+            raise InvalidHolderNumberException(f"{holder_number} is an invalid number")
+
+        won = json["status"] != "no_win"
+        return Result(won, holder_number, bond_period)
