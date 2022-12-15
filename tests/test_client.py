@@ -1,8 +1,8 @@
 import unittest
 
 import responses
-from client import CheckResult, Client, Result
-from exceptions import InvalidHolderNumberException
+from premium_bond_checker.client import CheckResult, Client, Result
+from premium_bond_checker.exceptions import InvalidHolderNumberException
 
 
 class TestCheckResult(unittest.TestCase):
