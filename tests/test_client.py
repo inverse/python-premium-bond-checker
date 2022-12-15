@@ -1,6 +1,7 @@
 import unittest
 
 import responses
+
 from premium_bond_checker.client import CheckResult, Client, Result
 from premium_bond_checker.exceptions import InvalidHolderNumberException
 
