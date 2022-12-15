@@ -3,7 +3,7 @@ from typing import List
 
 import requests
 
-from exceptions import InvalidHolderNumberException
+from .exceptions import InvalidHolderNumberException
 
 
 @dataclass

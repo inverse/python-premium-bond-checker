@@ -1,6 +1,6 @@
 import sys
 
-from client import Client
+from premium_bond_checker.client import Client
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
