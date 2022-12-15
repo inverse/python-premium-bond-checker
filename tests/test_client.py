@@ -1,12 +1,11 @@
 import unittest
 
 import responses
-
 from client import CheckResult, Client, Result
 from exceptions import InvalidHolderNumberException
 
 
-class CheckResultTest(unittest.TestCase):
+class TestCheckResult(unittest.TestCase):
     def test_has_won_single(self):
         check_result = CheckResult()
         check_result.add_result(Result(True, "abc1", "fda1"))
