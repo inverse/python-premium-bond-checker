@@ -43,6 +43,14 @@ class Client:
     def check_unclaimed(self, holder_number: str) -> Result:
         return self._do_request(holder_number, "unclaimed_prize")
 
+    def is_holder_number_valid(self, holder_number: str) -> bool:
+        try:
+            self.check_this_month(holder_number)
+        except InvalidHolderNumberException:
+            return False
+
+        return True
+
     def _do_request(self, holder_number: str, bond_period: str) -> Result:
         url = f"{self.BASE_URL}premium-bonds-have-i-won-ajax"
         response = requests.post(
