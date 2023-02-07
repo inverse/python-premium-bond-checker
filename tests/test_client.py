@@ -70,3 +70,41 @@ class ClientTest(unittest.TestCase):
 
         with self.assertRaises(InvalidHolderNumberException):
             client.check_this_month("abcd")
+
+    @responses.activate
+    def test_is_holder_number_valid_false(self):
+        responses.add(
+            responses.POST,
+            "https://www.nsandi.com/premium-bonds-have-i-won-ajax",
+            json={
+                "status": "no_win",
+                "header": "Invalid holder's number",
+                "tagline": "You have entered an invalid holder's number. Please check and try again.",
+                "holder_number": "is invalid",
+                "history": [{"prize": "0", "bond_number": "0", "date": ""}],
+            },
+            status=200,
+        )
+
+        client = Client()
+
+        self.assertFalse(client.is_holder_number_valid("abcd"))
+
+    @responses.activate
+    def test_is_holder_number_valid_true(self):
+        responses.add(
+            responses.POST,
+            "https://www.nsandi.com/premium-bonds-have-i-won-ajax",
+            json={
+                "status": "no_win",
+                "header": "Sorry you didn't win",
+                "tagline": "Good luck next month",
+                "holder_number": "abcd",
+                "history": [{"prize": "0", "bond_number": "0", "date": ""}],
+            },
+            status=200,
+        )
+
+        client = Client()
+
+        self.assertTrue(client.is_holder_number_valid("abcd"))
