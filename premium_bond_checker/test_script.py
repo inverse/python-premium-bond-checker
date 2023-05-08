@@ -1,10 +1,10 @@
-import sys
 import os
+import sys
 
 from premium_bond_checker.client import Client
 
 if __name__ == "__main__":
-    premium_bond_number = os.environ.get('PREMIUM_BOND_NUMBER')
+    premium_bond_number = os.environ.get("PREMIUM_BOND_NUMBER")
 
     if len(sys.argv) == 2:
         premium_bond_number = sys.argv[1]
