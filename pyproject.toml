@@ -10,7 +10,7 @@ python = "^3.10"
 requests = "^2.30.0"
 
 [tool.poetry.dev-dependencies]
-responses = "^0.23.1"
+responses = "^0.23.2"
 pytest = "^7.3.1"
 
 [tool.ruff]
