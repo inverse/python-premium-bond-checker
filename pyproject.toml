@@ -11,7 +11,7 @@ requests = "^2.31.0"
 
 [tool.poetry.dev-dependencies]
 responses = "^0.23.1"
-pytest = "^7.3.1"
+pytest = "^7.4.3"
 
 [tool.ruff]
 ignore = ["E501"]
