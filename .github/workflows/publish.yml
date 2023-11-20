@@ -7,6 +7,11 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-20.04
+    environment:
+      name: pypi
+      url: https://pypi.org/p/premium-bond-checker
+    permissions:
+      id-token: write 
     steps:
     - uses: actions/checkout@master
     - uses: actions/setup-python@v4
