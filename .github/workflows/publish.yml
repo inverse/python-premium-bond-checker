@@ -1,21 +1,11 @@
-name: CI
+name: Publish
 
 on:
-  push:
-    branches: [master]
-  pull_request: ~
-
-env:
-  FORCE_COLOR: 1
+  release:
+    types: [published]
 
 jobs:
-  pre-commit:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
-    - uses: pre-commit/action@v3.0.0
-  test:
+  publish:
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@master
@@ -28,5 +18,12 @@ jobs:
         poetry-version: '1.6.1'
     - name: Install pip dependencies
       run: poetry install
-    - name: Test
-      run: poetry run pytest tests/
+    - name: Package
+      run: |
+        poetry version ${{ github.event.release.tag_name }}
+        poetry build
+    - name: Publish to PyPI
+      uses: pypa/gh-action-pypi-publish@v1.8.10
+      with:
+        user: __token__
+        password: ${{ secrets.pypi_token }}
