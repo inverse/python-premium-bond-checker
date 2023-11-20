@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "premium-bond-checker"
-version = "0.1.0"
+version = "0.0.0"
 description = "Simple premium bond checker library"
 authors = ["Malachi Soord <inverse.chi@gmail.com>"]
 license = "MIT"
