@@ -67,5 +67,5 @@ class Client:
         if json["holder_number"] == "is invalid":
             raise InvalidHolderNumberException(f"{holder_number} is an invalid number")
 
-        won = json["status"] != "no_win"
+        won = json["status"] == "win"
         return Result(won, holder_number, bond_period)
