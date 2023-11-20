@@ -4,6 +4,7 @@ version = "0.0.0"
 description = "Simple premium bond checker library"
 authors = ["Malachi Soord <inverse.chi@gmail.com>"]
 license = "MIT"
+readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -15,7 +16,6 @@ pytest = "^7.4.3"
 
 [tool.ruff]
 ignore = ["E501"]
-
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
