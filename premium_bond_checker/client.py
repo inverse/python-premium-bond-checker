@@ -6,7 +6,7 @@ import requests
 from .exceptions import InvalidHolderNumberException
 
 
-class ResultType:
+class BondPeriod:
     THIS_MONTH = "this_month"
     LAST_SIX_MONTHS = "last_six_months"
     UNCLAIMED = "unclaimed"
@@ -23,8 +23,8 @@ class CheckResult:
     def __init__(self):
         self.results: Dict[str, Result] = {}
 
-    def add_result(self, key: str, result: Result):
-        self.results[key] = result
+    def add_result(self, result: Result):
+        self.results[result.bond_period] = result
 
     def has_won(self) -> bool:
         return any([result.won for result in list(self.results.values())])
@@ -35,25 +35,19 @@ class Client:
 
     def check(self, holder_number: str) -> CheckResult:
         check_result = CheckResult()
-        check_result.add_result(
-            ResultType.THIS_MONTH, self.check_this_month(holder_number)
-        )
-        check_result.add_result(
-            ResultType.LAST_SIX_MONTHS, self.check_last_six_months(holder_number)
-        )
-        check_result.add_result(
-            ResultType.UNCLAIMED, self.check_unclaimed(holder_number)
-        )
+        check_result.add_result(self.check_this_month(holder_number))
+        check_result.add_result(self.check_last_six_months(holder_number))
+        check_result.add_result(self.check_unclaimed(holder_number))
         return check_result
 
     def check_this_month(self, holder_number: str) -> Result:
-        return self._do_request(holder_number, "this_month")
+        return self._do_request(holder_number, BondPeriod.THIS_MONTH)
 
     def check_last_six_months(self, holder_number: str) -> Result:
-        return self._do_request(holder_number, "last_six_month")
+        return self._do_request(holder_number, BondPeriod.LAST_SIX_MONTHS)
 
     def check_unclaimed(self, holder_number: str) -> Result:
-        return self._do_request(holder_number, "unclaimed_prize")
+        return self._do_request(holder_number, BondPeriod.UNCLAIMED)
 
     def is_holder_number_valid(self, holder_number: str) -> bool:
         try:
