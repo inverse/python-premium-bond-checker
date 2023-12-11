@@ -2,31 +2,41 @@ import unittest
 
 import responses
 
-from premium_bond_checker.client import CheckResult, Client, Result
+from premium_bond_checker.client import CheckResult, Client, Result, ResultType
 from premium_bond_checker.exceptions import InvalidHolderNumberException
 
 
 class TestCheckResult(unittest.TestCase):
+    def test_has_won_empty(self):
+        check_result = CheckResult()
+        self.assertFalse(check_result.has_won())
+
     def test_has_won_single(self):
         check_result = CheckResult()
-        check_result.add_result(Result(True, "abc1", "fda1"))
+        check_result.add_result(ResultType.THIS_MONTH, Result(True, "abc1", "fda1"))
         self.assertTrue(check_result.has_won())
 
     def test_has_won_mixed(self):
         check_result = CheckResult()
-        check_result.add_result(Result(True, "abc1", "fda1"))
-        check_result.add_result(Result(False, "abc2", "fda2"))
+        check_result.add_result(ResultType.THIS_MONTH, Result(True, "abc1", "fda1"))
+        check_result.add_result(
+            ResultType.LAST_SIX_MONTHS, Result(False, "abc2", "fda2")
+        )
         self.assertTrue(check_result.has_won())
 
     def test_has_won_single_false(self):
         check_result = CheckResult()
-        check_result.add_result(Result(False, "abc1", "fda1"))
+        check_result.add_result(
+            ResultType.LAST_SIX_MONTHS, Result(False, "abc1", "fda1")
+        )
         self.assertFalse(check_result.has_won())
 
     def test_has_won_mixed_false(self):
         check_result = CheckResult()
-        check_result.add_result(Result(False, "abc1", "fda1"))
-        check_result.add_result(Result(False, "abc2", "fda2"))
+        check_result.add_result(ResultType.THIS_MONTH, Result(False, "abc1", "fda1"))
+        check_result.add_result(
+            ResultType.LAST_SIX_MONTHS, Result(False, "abc2", "fda2")
+        )
         self.assertFalse(check_result.has_won())
 
 

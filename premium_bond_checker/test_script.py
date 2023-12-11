@@ -15,5 +15,10 @@ if __name__ == "__main__":
 
     print(f"Checking {premium_bond_number}")
     client = Client()
+
+    if not client.is_holder_number_valid(premium_bond_number):
+        print("Invalid holder number given")
+        exit(1)
+
     result = client.check(premium_bond_number)
     print(f"Winning: {result.has_won()}")
