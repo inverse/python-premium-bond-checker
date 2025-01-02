@@ -22,3 +22,8 @@ if __name__ == "__main__":
 
     result = client.check(premium_bond_number)
     print(f"Winning: {result.has_won()}")
+
+    result_this_month = client.check_this_month(premium_bond_number)
+    print(f"This Month Winning: {result_this_month.won}")
+    print(f"This Month Header: {result_this_month.header}")
+    print(f"This Month Tagline: {result_this_month.tagline}")
