@@ -13,24 +13,24 @@ class TestCheckResult(unittest.TestCase):
 
     def test_has_won_single(self):
         check_result = CheckResult()
-        check_result.add_result(Result(True, "abc1", BondPeriod.THIS_MONTH))
+        check_result.add_result(Result(True, "abc1", BondPeriod.THIS_MONTH, "You won", "£xx"))
         self.assertTrue(check_result.has_won())
 
     def test_has_won_mixed(self):
         check_result = CheckResult()
-        check_result.add_result(Result(True, "abc1", BondPeriod.THIS_MONTH))
-        check_result.add_result(Result(False, "abc2", BondPeriod.LAST_SIX_MONTHS))
+        check_result.add_result(Result(True, "abc1", BondPeriod.THIS_MONTH, "You won", "£xx"))
+        check_result.add_result(Result(False, "abc2", BondPeriod.LAST_SIX_MONTHS, "You didn't win", "Good luck next month"))
         self.assertTrue(check_result.has_won())
 
     def test_has_won_single_false(self):
         check_result = CheckResult()
-        check_result.add_result(Result(False, "abc1", BondPeriod.THIS_MONTH))
+        check_result.add_result(Result(False, "abc1", BondPeriod.THIS_MONTH, "You didn't win", "Good luck next month"))
         self.assertFalse(check_result.has_won())
 
     def test_has_won_mixed_false(self):
         check_result = CheckResult()
-        check_result.add_result(Result(False, "abc1", BondPeriod.THIS_MONTH))
-        check_result.add_result(Result(False, "abc2", BondPeriod.LAST_SIX_MONTHS))
+        check_result.add_result(Result(False, "abc1", BondPeriod.THIS_MONTH, "You didn't win", "Good luck next month"))
+        check_result.add_result(Result(False, "abc2", BondPeriod.LAST_SIX_MONTHS, "You didn't win", "Good luck next month"))
         self.assertFalse(check_result.has_won())
 
 
@@ -54,6 +54,8 @@ class ClientTest(unittest.TestCase):
         result = client.check_this_month("abcd")
 
         self.assertFalse(result.won)
+        self.assertEqual(result.header, "Sorry you didn't win", "header should be 'Sorry you didn't win'")
+        self.assertEqual(result.tagline, "Good luck next month", "tagline should be 'Good luck next month'")
 
     @responses.activate
     def test_check_this_month_invalid_holder_number(self):

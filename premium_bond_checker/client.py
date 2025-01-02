@@ -17,6 +17,8 @@ class Result:
     won: bool
     holder_number: str
     bond_period: str
+    header: str
+    tagline: str
 
 
 class CheckResult:
@@ -74,4 +76,6 @@ class Client:
             raise InvalidHolderNumberException(f"{holder_number} is an invalid number")
 
         won = json["status"] == "win"
-        return Result(won, holder_number, bond_period)
+        header = json["header"]
+        tagline = json["tagline"]
+        return Result(won, holder_number, bond_period, header, tagline)
