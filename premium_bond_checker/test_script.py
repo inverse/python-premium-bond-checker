@@ -27,3 +27,13 @@ if __name__ == "__main__":
     print(f"This Month Winning: {result_this_month.won}")
     print(f"This Month Header: {result_this_month.header}")
     print(f"This Month Tagline: {result_this_month.tagline}")
+    
+    result_last_six_months = client.check_last_six_months(premium_bond_number)
+    print(f"This Month Winning: {result_last_six_months.won}")
+    print(f"This Month Header: {result_last_six_months.header}")
+    print(f"This Month Tagline: {result_last_six_months.tagline}")
+
+    result_check_unclaimed = client.check_unclaimed(premium_bond_number)
+    print(f"This Month Winning: {result_check_unclaimed.won}")
+    print(f"This Month Header: {result_check_unclaimed.header}")
+    print(f"This Month Tagline: {result_check_unclaimed.tagline}")
