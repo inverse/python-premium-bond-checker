@@ -3,13 +3,13 @@ from typing import Dict
 
 import requests
 
-from .exceptions import InvalidHolderNumberException
+from premium_bond_checker.exceptions import InvalidHolderNumberException
 
 
 class BondPeriod:
     THIS_MONTH = "this_month"
-    LAST_SIX_MONTHS = "last_six_months"
-    UNCLAIMED = "unclaimed"
+    LAST_SIX_MONTHS = "last_six_month"
+    UNCLAIMED = "unclaimed_prize"
 
 
 @dataclass
