@@ -1,9 +1,25 @@
+import os
 import unittest
+from datetime import date
 
 import responses
+from freezegun import freeze_time
 
 from premium_bond_checker.client import BondPeriod, CheckResult, Client, Result
 from premium_bond_checker.exceptions import InvalidHolderNumberException
+
+
+def load_fixture(fixture_name: str) -> str:
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    fixture_path = os.path.join(base_dir, "fixtures", fixture_name)
+    if not os.path.exists(fixture_path):
+        raise FileNotFoundError(
+            f"Fixture file '{fixture_name}' not found in '{fixture_path}'"
+        )
+
+    # Load and return the fixture file content
+    with open(fixture_path, "r") as file:
+        return file.read()
 
 
 class TestCheckResult(unittest.TestCase):
@@ -158,3 +174,17 @@ class ClientTest(unittest.TestCase):
         client = Client()
 
         self.assertTrue(client.is_holder_number_valid("abcd"))
+
+    @freeze_time("2025-01-01 00:00:00")
+    @responses.activate
+    def test_next_draw_valid(self):
+        responses.add(
+            responses.GET,
+            "https://www.nsandi.com/prize-checker",
+            body=load_fixture("next_draw_valid.html"),
+            status=200,
+        )
+
+        client = Client()
+
+        self.assertEqual(date(2025, 1, 31), client.next_draw())
