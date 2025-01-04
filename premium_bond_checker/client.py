@@ -1,9 +1,15 @@
 from dataclasses import dataclass
+from datetime import date, datetime, timedelta
 from typing import Dict
 
+import pytz
 import requests
+from bs4 import BeautifulSoup
 
-from premium_bond_checker.exceptions import InvalidHolderNumberException
+from premium_bond_checker.exceptions import (
+    InvalidHolderNumberException,
+    PremiumBondCheckerException,
+)
 
 
 class BondPeriod:
@@ -33,7 +39,28 @@ class CheckResult:
 
 
 class Client:
-    BASE_URL = "https://www.nsandi.com/"
+    BASE_URL = "https://www.nsandi.com"
+
+    def next_draw(self) -> date:
+        try:
+            response = requests.get(f"{self.BASE_URL}/prize-checker", timeout=10)
+            response.raise_for_status()  # Raises HTTPError for bad responses (4xx and 5xx)
+            html_content = response.text
+        except requests.RequestException as e:
+            raise PremiumBondCheckerException(f"Failed to get prize checker page: {e}")
+
+        soup = BeautifulSoup(html_content, "html.parser")
+        days_remaining_element = soup.find_all(class_="pb-countdown-timer-value")
+
+        if not days_remaining_element or len(days_remaining_element) == 0:
+            raise PremiumBondCheckerException(
+                "Prize draw page did not contain any days remaining element"
+            )
+
+        days_remaining = int(days_remaining_element[0].text.strip())
+        current_date = self._current_date_gmt()
+
+        return current_date + timedelta(days=days_remaining)
 
     def check(self, holder_number: str) -> CheckResult:
         check_result = CheckResult()
@@ -60,7 +87,7 @@ class Client:
         return True
 
     def _do_request(self, holder_number: str, bond_period: str) -> Result:
-        url = f"{self.BASE_URL}premium-bonds-have-i-won-ajax"
+        url = f"{self.BASE_URL}/premium-bonds-have-i-won-ajax"
         response = requests.post(
             url,
             data={
@@ -79,3 +106,7 @@ class Client:
         header = json["header"]
         tagline = json["tagline"]
         return Result(won, holder_number, bond_period, header, tagline)
+
+    def _current_date_gmt(self) -> date:
+        gmt_timezone = pytz.timezone("GMT")
+        return datetime.now(gmt_timezone).date()
