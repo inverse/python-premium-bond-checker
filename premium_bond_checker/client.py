@@ -1,7 +1,8 @@
 from dataclasses import dataclass
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from typing import Dict
 
+import pytz
 import requests
 from bs4 import BeautifulSoup
 
@@ -57,7 +58,7 @@ class Client:
             )
 
         days_remaining = int(days_remaining_element[0].text.strip())
-        current_date = date.today()
+        current_date = self._current_date_gmt()
 
         return current_date + timedelta(days=days_remaining)
 
@@ -105,3 +106,7 @@ class Client:
         header = json["header"]
         tagline = json["tagline"]
         return Result(won, holder_number, bond_period, header, tagline)
+
+    def _current_date_gmt(self) -> date:
+        gmt_timezone = pytz.timezone("GMT")
+        return datetime.now(gmt_timezone).date()

@@ -16,7 +16,7 @@ repos:
     rev: v1.14.1
     hooks:
     -   id: mypy
-        additional_dependencies: [types-requests]
+        additional_dependencies: [types-requests, types-pytz]
 -   repo: https://github.com/charliermarsh/ruff-pre-commit
     rev: 'v0.8.6'
     hooks:
