@@ -9,13 +9,17 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 requests = "^2.31.0"
+beautifulsoup4 = "^4.12.3"
 
 [tool.poetry.dev-dependencies]
 responses = "^0.25.3"
 pytest = "^8.3.4"
 
-[tool.ruff]
+[tool.ruff.lint]
 ignore = ["E501"]
+
+[tool.isort]
+profile = "black"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

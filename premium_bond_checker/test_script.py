@@ -20,6 +20,9 @@ if __name__ == "__main__":
         print("Invalid holder number given")
         exit(1)
 
+    next_draw = client.next_draw()
+    print(f"Next draw: {next_draw}")
+
     result = client.check(premium_bond_number)
     print(f"Winning: {result.has_won()}")
 
@@ -27,7 +30,7 @@ if __name__ == "__main__":
     print(f"This Month Winning: {result_this_month.won}")
     print(f"This Month Header: {result_this_month.header}")
     print(f"This Month Tagline: {result_this_month.tagline}")
-    
+
     result_last_six_months = client.check_last_six_months(premium_bond_number)
     print(f"This Month Winning: {result_last_six_months.won}")
     print(f"This Month Header: {result_last_six_months.header}")
