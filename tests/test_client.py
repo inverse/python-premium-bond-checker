@@ -107,7 +107,7 @@ class ClientTest(unittest.TestCase):
 
         self.assertFalse(check_result.has_won())
 
-        for bond_period in BondPeriod:
+        for bond_period in BondPeriod.all():
             self.assertEqual(
                 "Sorry you didn't win",
                 check_result.results[bond_period].header,
