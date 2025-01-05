@@ -1,0 +1,4 @@
+[run]
+source = premium_bond_checker
+
+omit = tests/*
