@@ -17,6 +17,10 @@ class BondPeriod:
     LAST_SIX_MONTHS = "last_six_month"
     UNCLAIMED = "unclaimed_prize"
 
+    @classmethod
+    def all(cls) -> list:
+        return [cls.THIS_MONTH, cls.LAST_SIX_MONTHS, cls.UNCLAIMED]
+
 
 @dataclass
 class Result:
