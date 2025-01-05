@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta
+from enum import StrEnum
 from typing import Dict
 
 import pytz
@@ -12,7 +13,7 @@ from premium_bond_checker.exceptions import (
 )
 
 
-class BondPeriod:
+class BondPeriod(StrEnum):
     THIS_MONTH = "this_month"
     LAST_SIX_MONTHS = "last_six_month"
     UNCLAIMED = "unclaimed_prize"

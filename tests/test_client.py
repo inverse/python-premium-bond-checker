@@ -88,6 +88,38 @@ class TestCheckResult(unittest.TestCase):
 
 class ClientTest(unittest.TestCase):
     @responses.activate
+    def test_check_valid(self):
+        responses.add(
+            responses.POST,
+            "https://www.nsandi.com/premium-bonds-have-i-won-ajax",
+            json={
+                "status": "no_win",
+                "header": "Sorry you didn't win",
+                "tagline": "Good luck next month",
+                "holder_number": "abcd",
+                "history": [{"prize": "0", "bond_number": "0", "date": ""}],
+            },
+            status=200,
+        )
+
+        client = Client()
+        check_result = client.check("abcd")
+
+        self.assertFalse(check_result.has_won())
+
+        for bond_period in BondPeriod:
+            self.assertEqual(
+                "Sorry you didn't win",
+                check_result.results[bond_period].header,
+                "header should be 'Sorry you didn't win'",
+            )
+            self.assertEqual(
+                "Good luck next month",
+                check_result.results[bond_period].tagline,
+                "tagline should be 'Good luck next month'",
+            )
+
+    @responses.activate
     def test_check_this_month_valid(self):
         responses.add(
             responses.POST,
@@ -107,13 +139,13 @@ class ClientTest(unittest.TestCase):
 
         self.assertFalse(result.won)
         self.assertEqual(
-            result.header,
             "Sorry you didn't win",
+            result.header,
             "header should be 'Sorry you didn't win'",
         )
         self.assertEqual(
-            result.tagline,
             "Good luck next month",
+            result.tagline,
             "tagline should be 'Good luck next month'",
         )
 
