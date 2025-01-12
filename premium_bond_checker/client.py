@@ -2,14 +2,12 @@ from dataclasses import dataclass
 from datetime import date, datetime, timedelta
 from typing import Dict
 
+import holidays
 import pytz
 import requests
-from bs4 import BeautifulSoup
+from dateutil.relativedelta import relativedelta
 
-from premium_bond_checker.exceptions import (
-    InvalidHolderNumberException,
-    PremiumBondCheckerException,
-)
+from premium_bond_checker.exceptions import InvalidHolderNumberException
 
 
 class BondPeriod:
@@ -46,25 +44,13 @@ class Client:
     BASE_URL = "https://www.nsandi.com"
 
     def next_draw(self) -> date:
-        try:
-            response = requests.get(f"{self.BASE_URL}/prize-checker", timeout=10)
-            response.raise_for_status()  # Raises HTTPError for bad responses (4xx and 5xx)
-            html_content = response.text
-        except requests.RequestException as e:
-            raise PremiumBondCheckerException(f"Failed to get prize checker page: {e}")
+        today = date.today()
 
-        soup = BeautifulSoup(html_content, "html.parser")
-        days_remaining_element = soup.find_all(class_="pb-countdown-timer-value")
+        this_month_draw = self._get_draw_date(today, 0)
+        if today.day <= this_month_draw.day:
+            return this_month_draw
 
-        if not days_remaining_element or len(days_remaining_element) == 0:
-            raise PremiumBondCheckerException(
-                "Prize draw page did not contain any days remaining element"
-            )
-
-        days_remaining = int(days_remaining_element[0].text.strip())
-        current_date = self._current_date_gmt()
-
-        return current_date + timedelta(days=days_remaining)
+        return self._get_draw_date(today, 1)
 
     def check(self, holder_number: str) -> CheckResult:
         check_result = CheckResult()
@@ -114,3 +100,12 @@ class Client:
     def _current_date_gmt(self) -> date:
         gmt_timezone = pytz.timezone("GMT")
         return datetime.now(gmt_timezone).date()
+
+    def _get_draw_date(self, today: date, month_offset: int) -> date:
+        offset_month = today + relativedelta(months=month_offset)
+        first_day_of_month = offset_month.replace(day=1)
+        uk_holidays = holidays.UnitedKingdom(years=first_day_of_month.year)
+        while first_day_of_month.weekday() >= 5 or first_day_of_month in uk_holidays:
+            first_day_of_month += timedelta(days=1)
+
+        return first_day_of_month

@@ -208,15 +208,11 @@ class ClientTest(unittest.TestCase):
         self.assertTrue(client.is_holder_number_valid("abcd"))
 
     @freeze_time("2025-01-01 00:00:00")
-    @responses.activate
-    def test_next_draw_valid(self):
-        responses.add(
-            responses.GET,
-            "https://www.nsandi.com/prize-checker",
-            body=load_fixture("next_draw_valid.html"),
-            status=200,
-        )
-
+    def test_next_draw_same_month(self):
         client = Client()
+        self.assertEqual(date(2025, 1, 2), client.next_draw())
 
-        self.assertEqual(date(2025, 1, 31), client.next_draw())
+    @freeze_time("2025-01-04 00:00:00")
+    def test_next_draw_next_month(self):
+        client = Client()
+        self.assertEqual(date(2025, 2, 3), client.next_draw())
