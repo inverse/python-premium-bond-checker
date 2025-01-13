@@ -24,7 +24,7 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: Get Poetry version from .mise.toml
-      uses: SebRollen/toml-action@v1.0.2
+      uses: SebRollen/toml-action@v1.2.0
       id: get-poetry-version
       with:
         file: .mise.toml
