@@ -9,7 +9,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 requests = "^2.31.0"
-pytz = "^2024.2"
+pytz = ">=2024.2,<2026.0"
 holidays = ">=0.64,<0.66"
 
 [tool.poetry.group.dev.dependencies]
