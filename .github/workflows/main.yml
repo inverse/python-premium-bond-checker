@@ -23,19 +23,7 @@ jobs:
         python-version: ['3.13', '3.12', '3.11', '3.10']
     steps:
     - uses: actions/checkout@master
-    - name: Get Poetry version from .mise.toml
-      uses: SebRollen/toml-action@v1.2.0
-      id: get-poetry-version
-      with:
-        file: .mise.toml
-        field: tools.poetry
-    - uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Setup
-      uses: abatilo/actions-poetry@v4
-      with:
-        poetry-version: ${{ steps.get-poetry-version.outputs.value }}
+    - uses: jdx/mise-action@v2
     - name: Install pip dependencies
       run: poetry install
     - name: Test with coverage
