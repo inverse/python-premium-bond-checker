@@ -17,12 +17,12 @@ jobs:
     - name: Run pre-commit
       run: pre-commit run --show-diff-on-failure --color=always
   test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         python-version: ['3.13', '3.12', '3.11', '3.10']
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v4
     - uses: jdx/mise-action@v2
       with: 
         log_level: debug
