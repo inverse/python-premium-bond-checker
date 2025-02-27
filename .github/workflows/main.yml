@@ -24,6 +24,8 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - uses: jdx/mise-action@v2
+      with: 
+        log_level: debug
     - name: Install pip dependencies
       run: poetry install
     - name: Test with coverage
