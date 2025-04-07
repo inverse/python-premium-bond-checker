@@ -22,7 +22,7 @@ jobs:
         restore-keys: |
           pre-commit-${{ runner.os }}-
     - name: Run pre-commit
-      run: pre-commit run --show-diff-on-failure --color=always
+      run: pre-commit run --all-files --show-diff-on-failure --color=always
   test:
     runs-on: ubuntu-24.04
     strategy:
