@@ -12,6 +12,10 @@ Simple premium bond checker library that is built against [Nsandi](https://www.n
 
 ## Usage
 
+### Check next draw date
+
+You can check the next draw date, which is calculated from the first working day of the month.
+
 ```python
 from premium_bond_checker.client import Client
 
@@ -22,6 +26,18 @@ client = Client()
 # Getting next draw date
 next_draw = client.next_draw()
 print(f"Next draw: {next_draw}")
+```
+
+### Check results
+
+Results can be checked either granular or on all data points.
+
+```python
+from premium_bond_checker.client import Client
+
+premium_bond_number = 'your bond number'
+
+client = Client()
 
 # Check if you've won
 result = client.check(premium_bond_number)
@@ -43,8 +59,6 @@ print(f"This Month Winning: {result_check_unclaimed.won}")
 print(f"This Month Header: {result_check_unclaimed.header}")
 print(f"This Month Tagline: {result_check_unclaimed.tagline}")
 ```
-
-
 ## License
 
 MIT
