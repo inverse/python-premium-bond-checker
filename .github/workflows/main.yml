@@ -30,15 +30,19 @@ jobs:
         python-version: ['3.13', '3.12', '3.11', '3.10']
     steps:
     - uses: actions/checkout@v4
-    - uses: jdx/mise-action@v2
+    - name: Get Python version from .mise.toml
+      uses: SebRollen/toml-action@v1.0.2
+      id: get-python-version
       with:
-        log_level: debug
+        file: .mise.toml
+        field: tools.python
+    - uses: jdx/mise-action@v2
     - name: Install pip dependencies
       run: poetry install
     - name: Test with coverage
       run: poetry run pytest --cov premium_bond_checker --cov-branch --cov-report=xml
     - name: Upload coverage reports to Codecov
-      if: matrix.python-version == '3.13'
+      if: ${{ matrix.python-version ==  steps.get-python-version.outputs.value }}
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
