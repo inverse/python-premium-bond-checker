@@ -44,13 +44,13 @@ class Client:
     BASE_URL = "https://www.nsandi.com"
 
     def next_draw(self) -> date:
-        today = date.today()
+        today_london = self._current_date_london()
 
-        this_month_draw = self._get_draw_date(today, 0)
-        if today.day <= this_month_draw.day:
+        this_month_draw = self._get_draw_date(today_london, 0)
+        if today_london.day <= this_month_draw.day:
             return this_month_draw
 
-        return self._get_draw_date(today, 1)
+        return self._get_draw_date(today_london, 1)
 
     def check(self, holder_number: str) -> CheckResult:
         check_result = CheckResult()
@@ -97,9 +97,8 @@ class Client:
         tagline = json["tagline"]
         return Result(won, holder_number, bond_period, header, tagline)
 
-    def _current_date_gmt(self) -> date:
-        gmt_timezone = pytz.timezone("GMT")
-        return datetime.now(gmt_timezone).date()
+    def _current_date_london(self) -> date:
+        return datetime.now(pytz.timezone("Europe/London")).date()
 
     def _get_draw_date(self, today: date, month_offset: int) -> date:
         offset_month = today + relativedelta(months=month_offset)
