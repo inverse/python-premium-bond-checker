@@ -1,5 +1,5 @@
 from .client import BondPeriod, Client
-from .exceptions import InvalidHolderNumberException
+from .exceptions import InvalidHolderNumberException, PremiumBondCheckerException
 from .models import CheckResult, Result
 
 __all__ = [
@@ -7,5 +7,6 @@ __all__ = [
     "BondPeriod",
     "CheckResult",
     "Result",
+    "PremiumBondCheckerException",
     "InvalidHolderNumberException",
 ]
