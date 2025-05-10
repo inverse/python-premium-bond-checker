@@ -1,13 +1,11 @@
-from dataclasses import dataclass
-from datetime import date, datetime, timedelta
-from typing import Dict
+from datetime import date
+from typing import List
 
-import holidays
-import pytz
 import requests
-from dateutil.relativedelta import relativedelta
 
 from premium_bond_checker.exceptions import InvalidHolderNumberException
+from premium_bond_checker.models import CheckResult, Result
+from premium_bond_checker.utils import current_date_london, get_draw_date
 
 
 class BondPeriod:
@@ -16,41 +14,22 @@ class BondPeriod:
     UNCLAIMED = "unclaimed_prize"
 
     @classmethod
-    def all(cls) -> list:
+    def all(cls) -> List[str]:
         return [cls.THIS_MONTH, cls.LAST_SIX_MONTHS, cls.UNCLAIMED]
-
-
-@dataclass
-class Result:
-    won: bool
-    holder_number: str
-    bond_period: str
-    header: str
-    tagline: str
-
-
-class CheckResult:
-    def __init__(self):
-        self.results: Dict[str, Result] = {}
-
-    def add_result(self, result: Result):
-        self.results[result.bond_period] = result
-
-    def has_won(self) -> bool:
-        return any([result.won for result in list(self.results.values())])
 
 
 class Client:
     BASE_URL = "https://www.nsandi.com"
 
-    def next_draw(self) -> date:
-        today_london = self._current_date_london()
+    @staticmethod
+    def next_draw() -> date:
+        today_london = current_date_london()
 
-        this_month_draw = self._get_draw_date(today_london, 0)
+        this_month_draw = get_draw_date(today_london, 0)
         if today_london.day <= this_month_draw.day:
             return this_month_draw
 
-        return self._get_draw_date(today_london, 1)
+        return get_draw_date(today_london, 1)
 
     def check(self, holder_number: str) -> CheckResult:
         check_result = CheckResult()
@@ -96,15 +75,3 @@ class Client:
         header = json["header"]
         tagline = json["tagline"]
         return Result(won, holder_number, bond_period, header, tagline)
-
-    def _current_date_london(self) -> date:
-        return datetime.now(pytz.timezone("Europe/London")).date()
-
-    def _get_draw_date(self, today: date, month_offset: int) -> date:
-        offset_month = today + relativedelta(months=month_offset)
-        first_day_of_month = offset_month.replace(day=1)
-        uk_holidays = holidays.UnitedKingdom(years=first_day_of_month.year)
-        while first_day_of_month.weekday() >= 5 or first_day_of_month in uk_holidays:
-            first_day_of_month += timedelta(days=1)
-
-        return first_day_of_month

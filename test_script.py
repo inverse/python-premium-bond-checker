@@ -1,7 +1,7 @@
 import os
 import sys
 
-from premium_bond_checker.client import Client
+from premium_bond_checker import Client
 
 if __name__ == "__main__":
     premium_bond_number = os.environ.get("PREMIUM_BOND_NUMBER")
