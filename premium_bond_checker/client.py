@@ -3,9 +3,9 @@ from typing import List
 
 import requests
 
-from premium_bond_checker.exceptions import InvalidHolderNumberException
-from premium_bond_checker.models import CheckResult, Result
-from premium_bond_checker.utils import current_date_london, get_draw_date
+from .exceptions import InvalidHolderNumberException
+from .models import CheckResult, Result
+from .utils import current_date_london, get_draw_date
 
 
 class BondPeriod:
