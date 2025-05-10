@@ -1,11 +1,17 @@
+# Python
 /.venv/
-/.idea/
 __pycache__/
 /dist/
+
+# IDE
+/.idea/
 
 # Coverage
 /.coverage
 /junit.xml
 /coverage.xml
+/htmlcov/
+
+# Development
 !/.envrc
 /.envrc.private
