@@ -5,7 +5,8 @@ from datetime import date
 import responses
 from freezegun import freeze_time
 
-from premium_bond_checker import BondPeriod, Client
+from premium_bond_checker import Client
+from premium_bond_checker.client import BondPeriod
 from premium_bond_checker.exceptions import InvalidHolderNumberException
 from premium_bond_checker.models import CheckResult, Result
 
