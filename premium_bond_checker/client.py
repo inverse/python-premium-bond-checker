@@ -5,7 +5,7 @@ import requests
 
 from .exceptions import InvalidHolderNumberException
 from .models import CheckResult, Result
-from .utils import current_date_london, get_draw_date
+from .utils import current_date_london, get_draw_date, get_draw_date_reveal_by
 
 
 class BondPeriod:
@@ -30,6 +30,10 @@ class Client:
             return this_month_draw
 
         return get_draw_date(today_london, 1)
+
+    @staticmethod
+    def next_draw_results_reveal_by() -> date:
+        return get_draw_date_reveal_by(Client.next_draw())
 
     def check(self, holder_number: str) -> CheckResult:
         check_result = CheckResult()
