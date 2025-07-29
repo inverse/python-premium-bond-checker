@@ -17,3 +17,7 @@ def get_draw_date(today: date, month_offset: int) -> date:
         first_day_of_month += timedelta(days=1)
 
     return first_day_of_month
+
+
+def get_draw_date_reveal_by(draw_date: date) -> date:
+    return draw_date + timedelta(days=3)

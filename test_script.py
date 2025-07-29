@@ -20,8 +20,8 @@ if __name__ == "__main__":
         print("Invalid holder number given")
         exit(1)
 
-    next_draw = client.next_draw()
-    print(f"Next draw: {next_draw}")
+    print(f"Next draw: {Client.next_draw()}")
+    print(f"Next draw reveal by: {client.next_draw_results_reveal_by()}")
 
     result = client.check(premium_bond_number)
     print(f"Winning: {result.has_won()}")

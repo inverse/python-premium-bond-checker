@@ -12,20 +12,23 @@ Simple premium bond checker library that is built against [Nsandi](https://www.n
 
 ## Usage
 
-### Check next draw date
+### Check the next draw date
 
 You can check the next draw date, which is calculated from the first working day of the month.
 
 ```python
 from premium_bond_checker.client import Client
 
-premium_bond_number = 'your bond number'
+print(f"Next draw: {Client.next_draw()}")
+```
 
-client = Client()
+### Check the next draw date revealed by
 
-# Getting next draw date
-next_draw = client.next_draw()
-print(f"Next draw: {next_draw}")
+Results are not always revealed when the results are drawn. It can take upto 3 additional days for this to happen.
+
+```python
+from premium_bond_checker.client import Client
+print(f"Next draw reveal by: {Client.next_draw_results_reveal_by()}")
 ```
 
 ### Check results
