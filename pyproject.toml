@@ -16,7 +16,7 @@ holidays = ">=0.71,<=1.0"
 responses = "^0.25.3"
 pytest = "^8.3.4"
 freezegun = "^1.5.1"
-pytest-cov = "^6.0.0"
+pytest-cov = "^7.0.0"
 pytest-socket = "^0.7.0"
 
 [tool.ruff.lint]
