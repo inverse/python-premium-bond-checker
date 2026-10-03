@@ -28,6 +28,7 @@ Results are not always revealed when the results are drawn. It can take upto 3 a
 
 ```python
 from premium_bond_checker.client import Client
+
 print(f"Next draw reveal by: {Client.next_draw_results_reveal_by()}")
 ```
 
@@ -38,7 +39,7 @@ Results can be checked either granular or on all data points.
 ```python
 from premium_bond_checker.client import Client
 
-premium_bond_number = 'your bond number'
+premium_bond_number = "your bond number"
 
 client = Client()
 

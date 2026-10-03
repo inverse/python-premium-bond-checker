@@ -3,10 +3,10 @@ from .exceptions import InvalidHolderNumberException, PremiumBondCheckerExceptio
 from .models import CheckResult, Result
 
 __all__ = [
-    "Client",
     "BondPeriod",
     "CheckResult",
-    "Result",
-    "PremiumBondCheckerException",
+    "Client",
     "InvalidHolderNumberException",
+    "PremiumBondCheckerException",
+    "Result",
 ]

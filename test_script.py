@@ -11,14 +11,14 @@ if __name__ == "__main__":
 
     if premium_bond_number is None:
         print("You must provide a holder number to check")
-        exit(1)
+        sys.exit(1)
 
     print(f"Checking {premium_bond_number}")
     client = Client()
 
     if not client.is_holder_number_valid(premium_bond_number):
         print("Invalid holder number given")
-        exit(1)
+        sys.exit(1)
 
     print(f"Next draw: {Client.next_draw()}")
     print(f"Next draw reveal by: {client.next_draw_results_reveal_by()}")
