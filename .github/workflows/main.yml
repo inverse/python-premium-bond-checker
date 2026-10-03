@@ -24,7 +24,7 @@ jobs:
     - name: Run pre-commit
       run: pre-commit run --all-files --show-diff-on-failure --color=always
   test:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     strategy:
       matrix:
         python-version: ['3.14', '3.13', '3.12', '3.11', '3.10']
