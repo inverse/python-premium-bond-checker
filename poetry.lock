@@ -270,18 +270,18 @@ python-dateutil = ">=2.7"
 
 [[package]]
 name = "holidays"
-version = "0.85"
+version = "0.105"
 description = "Open World Holidays Framework"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "holidays-0.85-py3-none-any.whl", hash = "sha256:46445107ee3251c7e2daa23773a86921fa2e29d09f850038e7bfa2c75a434ad8"},
-    {file = "holidays-0.85.tar.gz", hash = "sha256:4291155456c6abde885487a05bd16f523d4ef4136819a55833ff86f60ca3cc3b"},
+    {file = "holidays-0.105-py3-none-any.whl", hash = "sha256:7fbd87770f1128eb24514fbb4c3ec6afa1c72d65c346713dbc13c2d0297df481"},
+    {file = "holidays-0.105.tar.gz", hash = "sha256:fc9abc0c187b62e955f92aa12dbe7ed1998cc94712f295ec9244db788594d662"},
 ]
 
 [package.dependencies]
-python-dateutil = "*"
+python-dateutil = ">=2.9.0.post0,<3"
 
 [[package]]
 name = "idna"
