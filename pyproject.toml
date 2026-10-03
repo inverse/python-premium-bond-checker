@@ -13,7 +13,7 @@ pytz = ">=2026.4,<2026.5"
 holidays = ">=0.71,<=1.0"
 
 [tool.poetry.group.dev.dependencies]
-responses = "^0.25.3"
+responses = "^0.26.0"
 pytest = "^9.0.0"
 freezegun = "^1.5.1"
 pytest-cov = "^7.0.0"
