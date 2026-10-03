@@ -1,5 +1,4 @@
 from datetime import date
-from typing import List
 
 import requests
 
@@ -14,7 +13,7 @@ class BondPeriod:
     UNCLAIMED = "unclaimed_prize"
 
     @classmethod
-    def all(cls) -> List[str]:
+    def all(cls) -> list[str]:
         return [cls.THIS_MONTH, cls.LAST_SIX_MONTHS, cls.UNCLAIMED]
 
 

@@ -1,5 +1,4 @@
 from dataclasses import dataclass, field
-from typing import Dict, List
 
 
 @dataclass
@@ -16,7 +15,7 @@ class Result:
     bond_period: str
     header: str
     tagline: str
-    history: List[HistoryEntry] = field(default_factory=list)
+    history: list[HistoryEntry] = field(default_factory=list)
 
     def total_prize(self) -> int:
         return sum(entry.prize for entry in self.history)
@@ -24,10 +23,10 @@ class Result:
 
 class CheckResult:
     def __init__(self):
-        self.results: Dict[str, Result] = {}
+        self.results: dict[str, Result] = {}
 
     def add_result(self, result: Result):
         self.results[result.bond_period] = result
 
     def has_won(self) -> bool:
-        return any([result.won for result in list(self.results.values())])
+        return any(result.won for result in self.results.values())
