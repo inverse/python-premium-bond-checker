@@ -1,4 +1,3 @@
-import os
 import unittest
 from datetime import date
 
@@ -8,20 +7,7 @@ from freezegun import freeze_time
 from premium_bond_checker import Client
 from premium_bond_checker.client import BondPeriod
 from premium_bond_checker.exceptions import InvalidHolderNumberException
-from premium_bond_checker.models import CheckResult, Result
-
-
-def load_fixture(fixture_name: str) -> str:
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    fixture_path = os.path.join(base_dir, "fixtures", fixture_name)
-    if not os.path.exists(fixture_path):
-        raise FileNotFoundError(
-            f"Fixture file '{fixture_name}' not found in '{fixture_path}'"
-        )
-
-    # Load and return the fixture file content
-    with open(fixture_path, "r") as file:
-        return file.read()
+from premium_bond_checker.models import CheckResult, HistoryEntry, Result
 
 
 class TestCheckResult(unittest.TestCase):
@@ -122,7 +108,7 @@ class ClientTest(unittest.TestCase):
             )
 
     @responses.activate
-    def test_check_this_month_valid(self):
+    def test_check_this_month_valid_no_win(self):
         responses.add(
             responses.POST,
             "https://www.nsandi.com/premium-bonds-have-i-won-ajax",
@@ -140,16 +126,56 @@ class ClientTest(unittest.TestCase):
         result = client.check_this_month("abcd")
 
         self.assertFalse(result.won)
-        self.assertEqual(
-            "Sorry you didn't win",
-            result.header,
-            "header should be 'Sorry you didn't win'",
+        self.assertEqual([], result.history)
+        self.assertEqual(0, result.total_prize())
+        self.assertEqual("Sorry you didn't win", result.header)
+        self.assertEqual("Good luck next month", result.tagline)
+
+    @responses.activate
+    def test_check_this_month_valid_win(self):
+        responses.add(
+            responses.POST,
+            "https://www.nsandi.com/premium-bonds-have-i-won-ajax",
+            json={
+                "status": "win",
+                "header": "Congratulations!",
+                "tagline": "You've won £225 in October 2026's draw",
+                "holder_number": "abcd",
+                "history": [
+                    {
+                        "prize": "100",
+                        "bond_number": "111AA111111",
+                        "date": "October 2026",
+                    },
+                    {
+                        "date": "October 2026",
+                        "bond_number": "222BB222222",
+                        "prize": "100",
+                    },
+                    {
+                        "date": "October 2026",
+                        "bond_number": "333CC333333",
+                        "prize": "25",
+                    },
+                ],
+            },
+            status=200,
         )
+
+        result = Client().check_this_month("abcd")
+
+        self.assertTrue(result.won)
+        self.assertEqual("Congratulations!", result.header)
+        self.assertEqual("You've won £225 in October 2026's draw", result.tagline)
         self.assertEqual(
-            "Good luck next month",
-            result.tagline,
-            "tagline should be 'Good luck next month'",
+            [
+                HistoryEntry(100, "111AA111111", "October 2026"),
+                HistoryEntry(100, "222BB222222", "October 2026"),
+                HistoryEntry(25, "333CC333333", "October 2026"),
+            ],
+            result.history,
         )
+        self.assertEqual(225, result.total_prize())
 
     @responses.activate
     def test_check_this_month_invalid_holder_number(self):
