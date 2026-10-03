@@ -4,7 +4,7 @@ from typing import List
 import requests
 
 from .exceptions import InvalidHolderNumberException
-from .models import CheckResult, Result
+from .models import CheckResult, HistoryEntry, Result
 from .utils import current_date_london, get_draw_date, get_draw_date_reveal_by
 
 
@@ -78,4 +78,9 @@ class Client:
         won = "no" not in json["status"]
         header = json["header"]
         tagline = json["tagline"]
-        return Result(won, holder_number, bond_period, header, tagline)
+        history = [
+            HistoryEntry(int(entry["prize"]), entry["bond_number"], entry["date"])
+            for entry in json.get("history", [])
+            if entry.get("bond_number") not in (None, "", "0")
+        ]
+        return Result(won, holder_number, bond_period, header, tagline, history)

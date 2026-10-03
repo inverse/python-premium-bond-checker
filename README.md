@@ -8,7 +8,7 @@
 [![codecov](https://codecov.io/github/inverse/python-premium-bond-checker/graph/badge.svg?token=3IM22FJIJM)](https://codecov.io/github/inverse/python-premium-bond-checker)
 
 
-Simple premium bond checker library that is built against [Nsandi](https://www.nsandi.com/).
+Simple premium bond checker library that is built against [NS&I](https://www.nsandi.com/).
 
 ## Usage
 
