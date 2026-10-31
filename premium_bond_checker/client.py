@@ -2,7 +2,11 @@ from datetime import date
 
 import requests
 
-from .exceptions import InvalidHolderNumberException
+from .exceptions import (
+    ConnectionException,
+    InvalidHolderNumberException,
+    TimeoutException,
+)
 from .models import CheckResult, HistoryEntry, Result
 from .utils import current_date_london, get_draw_date, get_draw_date_reveal_by
 
@@ -19,6 +23,12 @@ class BondPeriod:
 
 class Client:
     BASE_URL = "https://www.nsandi.com"
+
+    def __init__(
+        self,
+        timeout: float | tuple[float, float] = 10,
+    ) -> None:
+        self.timeout = timeout
 
     @staticmethod
     def next_draw() -> date:
@@ -60,15 +70,21 @@ class Client:
 
     def _do_request(self, holder_number: str, bond_period: str) -> Result:
         url = f"{self.BASE_URL}/premium-bonds-have-i-won-ajax"
-        response = requests.post(
-            url,
-            data={
-                "field_premium_bond_period": bond_period,
-                "field_premium_bond_number": holder_number,
-            },
-        )
+        try:
+            response = requests.post(
+                url,
+                data={
+                    "field_premium_bond_period": bond_period,
+                    "field_premium_bond_number": holder_number,
+                },
+                timeout=self.timeout,
+            )
+            response.raise_for_status()
+        except requests.exceptions.Timeout as e:
+            raise TimeoutException(f"Request timed out connecting to NS&I: {e}") from e
+        except requests.exceptions.ConnectionError as e:
+            raise ConnectionException(f"Failed to connect to NS&I: {e}") from e
 
-        response.raise_for_status()
         json = response.json()
 
         if json["holder_number"] == "is invalid":
