@@ -1,5 +1,6 @@
 import unittest
 from datetime import date
+
 import requests
 import responses
 from freezegun import freeze_time
@@ -12,6 +13,7 @@ from premium_bond_checker.exceptions import (
     TimeoutException,
 )
 from premium_bond_checker.models import CheckResult, HistoryEntry, Result
+
 
 class TestCheckResult(unittest.TestCase):
     def test_has_won_empty(self):

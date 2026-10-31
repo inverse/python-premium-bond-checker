@@ -29,6 +29,7 @@ class Client:
         timeout: float | tuple[float, float] = 10,
     ) -> None:
         self.timeout = timeout
+
     @staticmethod
     def next_draw() -> date:
         today_london = current_date_london()
