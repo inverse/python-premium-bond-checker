@@ -1,14 +1,17 @@
 import unittest
 from datetime import date
-
+import requests
 import responses
 from freezegun import freeze_time
 
 from premium_bond_checker import Client
 from premium_bond_checker.client import BondPeriod
-from premium_bond_checker.exceptions import InvalidHolderNumberException
+from premium_bond_checker.exceptions import (
+    ConnectionException,
+    InvalidHolderNumberException,
+    TimeoutException,
+)
 from premium_bond_checker.models import CheckResult, HistoryEntry, Result
-
 
 class TestCheckResult(unittest.TestCase):
     def test_has_won_empty(self):
@@ -234,6 +237,28 @@ class ClientTest(unittest.TestCase):
         client = Client()
 
         self.assertTrue(client.is_holder_number_valid("abcd"))
+
+    @responses.activate
+    def test_check_timeout(self):
+        responses.add(
+            responses.POST,
+            "https://www.nsandi.com/premium-bonds-have-i-won-ajax",
+            body=requests.exceptions.Timeout("Connection timed out"),
+        )
+        client = Client(timeout=5)
+        with self.assertRaises(TimeoutException):
+            client.check_this_month("123456789")
+
+    @responses.activate
+    def test_check_connection_error(self):
+        responses.add(
+            responses.POST,
+            "https://www.nsandi.com/premium-bonds-have-i-won-ajax",
+            body=requests.exceptions.ConnectionError("Failed to connect"),
+        )
+        client = Client()
+        with self.assertRaises(ConnectionException):
+            client.check_this_month("123456789")
 
     @freeze_time("2025-01-01 00:00:00")
     def test_next_draw_same_month(self):
